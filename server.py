@@ -4,28 +4,26 @@ from uuid import uuid4
 
 from flask import Flask, Response, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
-from flask_flatpages import FlatPages, pygments_style_defs
-from flaskext.markdown import Markdown
+from flask_flatpages import FlatPages
 from settings import *
-from wtforms import StringField
-from wtforms.validators import DataRequired
 
-app = Flask(__name__, static_folder=f"./{STATIC_DIR}", template_folder=f"./{TEMPLATES_DIR}")
+app = Flask(
+    __name__, static_folder=f"./{STATIC_DIR}", template_folder=f"./{TEMPLATES_DIR}")
 app.config.from_object(__name__)
 flatpages = FlatPages(app)
-Markdown(app)
 bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = KEY
 
+
 @app.route('/')
 def index():
-    return render_template("index.html", site_title=SITE_TITLE, redir="false")
+    return render_template("index.html", site_title=SITE_TITLE)
 
 
 @app.route('/', methods=["POST"])
 def index_post():
     now = time()
-    
+
     for file in os.listdir(POSTS_DIR):
         if os.path.getmtime(os.path.join(POSTS_DIR, file)) < now - LIVETIME:
             if os.path.isfile(os.path.join(POSTS_DIR, file)):
@@ -35,8 +33,6 @@ def index_post():
 
     text = request.form.get('text')
 
-    # url = ""
-
     if text.strip() != "":
 
         curr_uuid = uuid4()
@@ -44,7 +40,6 @@ def index_post():
 
         with open(path, 'w') as file:
             file.write(text)
-
 
         return redirect(url_for("index", url=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}"))
     else:
@@ -67,4 +62,7 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    app.run(host=DOMAIN, port=PORT, debug=DEBUG, ssl_context=(HTTPS['cert'], HTTPS['key']))
+    app.run(host=DOMAIN, port=PORT, debug=DEBUG,
+            ssl_context=(HTTPS['cert'], HTTPS['key']))
+
+    # app.run(host=DOMAIN, port=PORT, debug=DEBUG)

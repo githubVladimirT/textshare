@@ -42,13 +42,31 @@
 
         #link {
             width: 550px;
+            margin: 10px;
+            padding: 10px;
             border-radius: 4px;
             background: #212529;
             font-family: monospace;
             font-size: 14px;
             color: white;
             resize: none;
+            white-space: nowrap;
+            overflow-y: hidden;
+            text-align: justify;
+            -moz-text-align-last: center;
+            text-align-last: center;
+        }
 
+        #link::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        #link::-webkit-scrollbar-thumb {
+            background: #fff;
+        }
+
+        #link::-webkit-scrollbar-track {
+            background: #212529;
         }
 
         #link:focus {
@@ -85,7 +103,7 @@
 
         <form method="POST" action="/" id="myform">
             <div class="form-outline mb-4 d-flex justify-content-center">
-                <textarea class="form-control" id="textarea" name="text"></textarea>
+                <textarea class="form-control" id="textarea" name="text" onfocus="clearLink();"></textarea>
             </div>
 
             <div id="submitdiv" class="mb-4 d-flex justify-content-center">
@@ -95,7 +113,7 @@
             </div>
 
             <div class="form-outline mb-4 d-flex justify-content-center">
-                <textarea class="form-control" id="link" rows="1" onclick="this.select()" readonly></textarea>
+                <textarea class="form-control" id="link" rows="1" onclick="this.select(); copy();" readonly></textarea>
             </div>
 
             <script>
@@ -107,6 +125,40 @@
 
                 console.log(url)
                 link.value = url;
+
+                const copy = () => {
+                    if (link.value) {
+                        navigator.clipboard.writeText(url).then(
+                            () => {
+                                // link.style.color = "green";
+                                link.style.outline = "5px solid green"
+                                console.log("copied ok")
+                            },
+                            () => {
+                                link.style.outline = "5px solid red"
+                                console.log("copied fail")
+                            }
+                        );
+                    }
+                }
+
+                const clearLink = () => {
+                    link.value = null;
+                    link.style.outline = "1px solid rgb(0, 68, 255)"
+                }
+
+                document.getElementById('textarea').addEventListener('keydown', function (e) {
+                    if (e.key == 'Tab') {
+                        e.preventDefault();
+                        var start = this.selectionStart;
+                        var end = this.selectionEnd;
+
+                        this.value = this.value.substring(0, start) +
+                            "\t" + this.value.substring(end);
+
+                        this.selectionStart = this.selectionEnd = start + 1;
+                    }
+                });
             </script>
         </form>
     </main>

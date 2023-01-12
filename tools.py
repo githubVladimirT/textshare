@@ -1,6 +1,6 @@
-#!/home/vladimir/vladimir/projects/copypaste/venv/bin/python
 import os
 import sys
+
 
 def clean():
     posts_dir = "./posts/"
@@ -10,6 +10,7 @@ def clean():
         return "successfully cleaned", None
     except Exception as err:
         return None, err
+
 
 def init():
     try:
@@ -21,13 +22,14 @@ def init():
     finally:
         print("successfully initialized")
 
+
 def main():
     args = sys.argv[1::]
 
     match args:
         case ["init"]:
             init()
-    
+
         case ["clean"]:
             stat, err = clean()
             if err != None:
@@ -38,6 +40,7 @@ def main():
         case _:
             print("error: unknow command")
             exit(-1)
+
 
 if __name__ == "__main__":
     main()
