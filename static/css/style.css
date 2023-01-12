@@ -981,6 +981,7 @@ section .container {
   transition: 0.4s;
   border-radius: 4px;
 }
+
 .contact .eform button[type=submit]:hover {
   background: rgba(255, 255, 255, 0.08);
 }

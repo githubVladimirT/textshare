@@ -2,7 +2,7 @@ import os
 from time import time
 from uuid import uuid4
 
-from flask import Flask, Response, render_template, request, session
+from flask import Flask, Response, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_flatpages import FlatPages, pygments_style_defs
 from flaskext.markdown import Markdown
@@ -19,7 +19,7 @@ app.config['SECRET_KEY'] = KEY
 
 @app.route('/')
 def index():
-    return render_template("index.html", cancopy="false")
+    return render_template("index.html", site_title=SITE_TITLE, redir="false")
 
 
 @app.route('/', methods=["POST"])
@@ -45,9 +45,10 @@ def index_post():
         with open(path, 'w') as file:
             file.write(text)
 
-        return render_template("index.html", uuid=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}", site_title=SITE_TITLE, cancopy="true")
+
+        return redirect(url_for("index", url=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}"))
     else:
-        return render_template("index.html", site_title=SITE_TITLE, cancopy="false")
+        return render_template("index.html", redir="false")
 
 
 @app.route('/post/<uuid>/')

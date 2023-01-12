@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Copypaste</title>
+    <title>{{ site_title }}</title>
     <link href="{{ url_for('static', filename='img/favicon.png') }}" rel="icon">
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
@@ -20,25 +20,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='pygments.css') }}">
 
     <style>
-        #output {
-            width: 100%;
-            text-align: center;
-        }
-
-        #inner {
-            display: inline-block;
-        }
-
-        #form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 500px;
+        br {
+            user-select: none;
         }
 
         #textarea {
-            padding: 0;
-            margin: 0;
             font-family: monospace;
             font-size: 14px;
             background: #212529;
@@ -50,20 +36,31 @@
             outline: none;
         }
 
-        /* #textarea:focus {
+        #textarea:focus {
             outline: 1px solid rgb(0, 68, 255);
-        } */
+        }
 
-        #btn {
-            position: absolute;
-            bottom: -40px;
+        #link {
+            width: 550px;
+            border-radius: 4px;
+            background: #212529;
+            font-family: monospace;
+            font-size: 14px;
+            color: white;
+            resize: none;
+
+        }
+
+        #link:focus {
+            outline: 1px solid rgb(0, 68, 255);
         }
 
         #submit {
-            margin: 10px;
-            padding: 10px;
-            position: fixed;
-            justify-items: center;
+            font-family: 'Raleway';
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
         }
     </style>
 </head>
@@ -86,37 +83,31 @@
 
         </script>
 
-        <form method="POST" action="">
-            <div id="form">
-                <textarea name="text" id="textarea"></textarea>
-
-                <div id="btn">
-                    <input type="submit" class="btn btn-primary btn-lg" id="submit">
-
-                    <h2 id="fail" style="color: rgb(255, 0, 0); visibility: hidden;" class="text-center">writing to
-                        clipboard failed</h2>
-                    <h1 style="color: rgb(0, 255, 0); visibility: hidden;" class="text-center" id="ok">OK</h1>
-
-                </div>
+        <form method="POST" action="/" id="myform">
+            <div class="form-outline mb-4 d-flex justify-content-center">
+                <textarea class="form-control" id="textarea" name="text"></textarea>
             </div>
-        </form>
-        <script>
-            if ("{{ cancopy }}" == "true") {
-                textarea = document.getElementById('textarea');
-                ok = document.getElementById('ok')
-                fail = document.getElementById('fail')
 
-                navigator.clipboard.writeText(`{{uuid}}`).then(
-                    () => {
-                        ok.style.visibility = "visible";
-                        console.log("copied ok")
-                    },
-                    () => {
-                        fail.style.visibility = "visible";
-                        console.log("copied fail")
-                    }
-                );
-            }
-        </script>
+            <div id="submitdiv" class="mb-4 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary btn-block" id="submit">
+                    submit
+                </button>
+            </div>
+
+            <div class="form-outline mb-4 d-flex justify-content-center">
+                <textarea class="form-control" id="link" rows="1" onclick="this.select()" readonly></textarea>
+            </div>
+
+            <script>
+                link = document.getElementById("link")
+
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const url = urlParams.get('url')
+
+                console.log(url)
+                link.value = url;
+            </script>
+        </form>
     </main>
 </body>

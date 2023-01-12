@@ -14,6 +14,8 @@ def clean():
 def init():
     try:
         os.mkdir("./posts/")
+        env = open('.env', 'x')
+        env.close()
     except FileExistsError:
         pass
     finally:
