@@ -12,7 +12,7 @@ TEMPLATES_DIR = "templates"
 SITE_TITLE = "Copypaste"
 KEY = dotenv.get_key('.env', 'KEY')
 HTTPS = {
-    'cert': "./cert/cert.pem",
-    'key': "./cert/key.pem"
+    'cert': "./certs/cert.pem",
+    'key': "./certs/key.pem"
 }
 
