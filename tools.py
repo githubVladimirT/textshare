@@ -1,11 +1,15 @@
 import os
 import sys
+from settings import POSTS_DIR, LOGS_DIR
 
 
 def clean():
-    posts_dir = "./posts/"
+    posts_dir = POSTS_DIR
+    logs_dir = LOGS_DIR
     try:
         for file in os.scandir(posts_dir):
+            os.remove(file.path)
+        for file in os.scandir(logs_dir):
             os.remove(file.path)
         return "successfully cleaned", None
     except Exception as err:
@@ -15,6 +19,7 @@ def clean():
 def init():
     try:
         os.mkdir("./posts/")
+        os.mkdir("./logs/")
         env = open('.env', 'x')
         env.close()
     except FileExistsError:

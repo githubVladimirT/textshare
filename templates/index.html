@@ -41,7 +41,7 @@
         }
 
         #link {
-            width: 550px;
+            width: 600px;
             margin: 10px;
             padding: 10px;
             border-radius: 4px;
@@ -80,6 +80,20 @@
             display: flex;
             justify-content: center;
         }
+
+        .topbar {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            background-color: #111;
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+            font-size: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -91,15 +105,15 @@
     <script src="{{ url_for('static', filename='assets/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/waypoints/noframework.waypoints.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
     <main id="main">
-
-        <br>
+        <div class="topbar">
+            <a href="{{ url_for('index') }}" id="home"><i class="bi bi-house" id="home"></i></a>
+        </div>
         <h1 class="text-center">Welcome</h1>
         <h4 class="text-center">You can keep up text for 48 hours without registration!</h4>
-        <script>
-
-        </script>
 
         <form method="POST" action="/" id="myform">
             <div class="form-outline mb-4 d-flex justify-content-center">
@@ -130,7 +144,6 @@
                     if (link.value) {
                         navigator.clipboard.writeText(url).then(
                             () => {
-                                // link.style.color = "green";
                                 link.style.outline = "5px solid green"
                                 console.log("copied ok")
                             },

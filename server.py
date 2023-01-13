@@ -2,26 +2,23 @@ import os
 from time import time
 from uuid import uuid4
 
-from flask import Flask, Response, render_template, request, redirect, url_for
-from flask_bootstrap import Bootstrap
-from flask_flatpages import FlatPages
+import logger
+from quart import Quart, Response, render_template, request, redirect, url_for
 from settings import *
 
-app = Flask(
+app = Quart(
     __name__, static_folder=f"./{STATIC_DIR}", template_folder=f"./{TEMPLATES_DIR}")
 app.config.from_object(__name__)
-flatpages = FlatPages(app)
-bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = KEY
 
 
 @app.route('/')
-def index():
-    return render_template("index.html", site_title=SITE_TITLE)
+async def index():
+    return await render_template("index.html", site_title=SITE_TITLE)
 
 
 @app.route('/', methods=["POST"])
-def index_post():
+async def index_post():
     now = time()
 
     for file in os.listdir(POSTS_DIR):
@@ -31,7 +28,7 @@ def index_post():
 
     del now
 
-    text = request.form.get('text')
+    text = (await request.form)['text']
 
     if text.strip() != "":
 
@@ -41,28 +38,27 @@ def index_post():
         with open(path, 'w') as file:
             file.write(text)
 
+        logger.clientslogger(str(request.remote_addr), "POST", str(curr_uuid))
+
         return redirect(url_for("index", url=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}"))
     else:
-        return render_template("index.html", redir="false")
+        return await render_template("index.html", redir="false")
 
 
-@app.route('/post/<uuid>/')
-def post(uuid):
+@app.route('/post/<uuid>/', methods=["GET"])
+async def post(uuid):
     path = '{}/{}'.format(POSTS_DIR, uuid)
 
-    with open(path, 'r') as file:
-        post = file.read()
+    try:
+        with open(path, 'r') as file:
+            post = file.read()
+        logger.clientslogger(str(request.remote_addr), "GET", uuid)
 
-    return Response(post, mimetype='text/plain')
+        return Response(post, mimetype='text/plain')
+    except FileNotFoundError:
+        return await render_template("404.html"), 404
 
 
 @app.errorhandler(404)
-def page_not_found(error):
-    return render_template("404.html"), 404
-
-
-if __name__ == "__main__":
-    app.run(host=DOMAIN, port=PORT, debug=DEBUG,
-            ssl_context=(HTTPS['cert'], HTTPS['key']))
-
-    # app.run(host=DOMAIN, port=PORT, debug=DEBUG)
+async def page_not_found(error):
+    return await render_template("404.html"), 404

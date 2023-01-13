@@ -22,7 +22,7 @@
 
 <style>
     .error-template {
-        padding-top: 150px;
+        padding-top: 100px;
         text-align: center;
     }
 
@@ -38,7 +38,25 @@
     #error {
         font-size: 400%;
     }
+
+    .topbar {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        background-color: #111;
+        border-radius: 50%;
+        top: 10px;
+        left: 10px;
+        font-size: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
+
+<div class="topbar">
+    <a href="/" id="home"><i class="bi bi-house" id="home"></i></a>
+</div>
 
 <div class="container">
     <div class="row">
@@ -47,7 +65,7 @@
                 <h1 id="error">404</h1>
                 <div class="error-details">Page not found</div>
                 <div style="margin: 100px;" class="error-actions">
-                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">go back</a>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">HOME</a>
                 </div>
             </div>
         </div>
