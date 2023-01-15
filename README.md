@@ -1,5 +1,7 @@
 # CopyPaste
 
+### Required python version >=3.7
+
 
 ### Run:
 ```bash
