@@ -3,7 +3,6 @@ import sys
 import os
 from settings import LOGS_DIR, LOG_LEVEL
 from datetime import datetime
-from logging_utilities.log_record import LogRecordIgnoreMissing
 import argparse
 
 
@@ -30,6 +29,9 @@ def clientslogger(clientip: str, req: str, targetname: str):
         case "GET":
             logging.info("requested to file:", extra=data)
             return f"get request had written to ./{LOGS_DIR}/{name}", name, None
+        case "DELETE":
+            logging.info("requested to deleted file: ", extra=data)
+            return f"request to deleted file had written to ./{LOGS_DIR}/{name}", name, None
         case _:
             return "error: unknow request", name, True
 if __name__ == "__main__":

@@ -3,5 +3,6 @@
 
 ### Run:
 ```bash
-sh run.sh
+pip install -r requirements.txt
+python run.py
 ```

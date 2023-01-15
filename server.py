@@ -19,15 +19,6 @@ async def index():
 
 @app.route('/', methods=["POST"])
 async def index_post():
-    now = time()
-
-    for file in os.listdir(POSTS_DIR):
-        if os.path.getmtime(os.path.join(POSTS_DIR, file)) < now - LIVETIME:
-            if os.path.isfile(os.path.join(POSTS_DIR, file)):
-                os.remove(os.path.join(POSTS_DIR, file))
-
-    del now
-
     text = (await request.form)['text']
 
     if text.strip() != "":
@@ -42,12 +33,14 @@ async def index_post():
 
         return redirect(url_for("index", url=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}"))
     else:
-        return await render_template("index.html", redir="false")
+        return await render_template("index.html")
 
 
 @app.route('/post/<uuid>/', methods=["GET"])
 async def post(uuid):
     path = '{}/{}'.format(POSTS_DIR, uuid)
+
+    delete_old_posts()
 
     try:
         with open(path, 'r') as file:
@@ -62,3 +55,13 @@ async def post(uuid):
 @app.errorhandler(404)
 async def page_not_found(error):
     return await render_template("404.html"), 404
+
+
+def delete_old_posts():
+    now = time()
+    for file in os.listdir(POSTS_DIR):
+        if os.path.getmtime(os.path.join(POSTS_DIR, file)) < now - LIVETIME:
+            if os.path.isfile(os.path.join(POSTS_DIR, file)):
+                os.rename(os.path.join(POSTS_DIR, file), os.path.join(
+                    POSTS_OLD_DIR, file + "_deleted"))
+                logger.clientslogger(str(request.remote_addr), "DELETE", file)

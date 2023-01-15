@@ -1,15 +1,15 @@
 import os
 import sys
-from settings import POSTS_DIR, LOGS_DIR
+from settings import POSTS_DIR, POSTS_OLD_DIR, LOGS_DIR
 
 
 def clean():
-    posts_dir = POSTS_DIR
-    logs_dir = LOGS_DIR
     try:
-        for file in os.scandir(posts_dir):
+        for file in os.scandir(POSTS_DIR):
             os.remove(file.path)
-        for file in os.scandir(logs_dir):
+        for file in os.scandir(POSTS_OLD_DIR):
+            os.remove(file.path)
+        for file in os.scandir(LOGS_DIR):
             os.remove(file.path)
         return "successfully cleaned", None
     except Exception as err:
