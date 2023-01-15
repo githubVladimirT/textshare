@@ -1,6 +1,6 @@
 # CopyPaste
 
-### Required python version >=3.7
+### Working on python version 3.11
 
 
 ### Run:
