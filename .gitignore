@@ -5,3 +5,4 @@ venv/
 logs/*
 posts/*
 posts.old/*
+.cache_ggshield
