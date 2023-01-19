@@ -1,0 +1,7 @@
+repos:
+  - repo: https://github.com/githubVladimirT/textshare
+    rev: v1.14.2
+    hooks:
+      - id: ggshield
+        language_version: python3
+        stages: [commit]
