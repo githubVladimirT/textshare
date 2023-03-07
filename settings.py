@@ -1,7 +1,7 @@
 import dotenv
 import logging
 
-DOMAIN = "0.0.0.0"
+DOMAIN = "127.0.0.1"
 PORT = 7443
 PREF = "https://"
 DEBUG = False

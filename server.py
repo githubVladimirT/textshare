@@ -9,7 +9,7 @@ from settings import *
 app = Quart(
     __name__, static_folder=f"./{STATIC_DIR}", template_folder=f"./{TEMPLATES_DIR}")
 app.config.from_object(__name__)
-app.config['SECRET_KEY'] = KEY
+# app.config['SECRET_KEY'] = KEY
 
 
 @app.route('/')
