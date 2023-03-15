@@ -1,4 +1,4 @@
-# CopyPaste
+# TextShare
 
 ### Working on python version 3.11
 
