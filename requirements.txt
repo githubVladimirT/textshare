@@ -1,9 +1,9 @@
 hypercorn
 Click==7.0
 Quart
-Jinja2==2.11.3
-MarkupSafe==1.1.1
-Pygments==2.7.4
-Werkzeug==2.2.3
+Jinja2 #==2.11.3
+MarkupSafe #==1.1.1
+Pygments #==2.7.4
+Werkzeug #==2.2.3
 python-dotenv
 logging_utilities
