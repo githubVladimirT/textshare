@@ -112,8 +112,8 @@
         <div class="topbar">
             <a href="{{ url_for('index') }}" id="home"><i class="bi bi-house" id="home"></i></a>
         </div>
-        <h1 class="text-center">Welcome</h1>
-        <h4 class="text-center">You can keep up text for 48 hours without registration!</h4>
+        <h1 class="text-center">Добро пожаловать</h1>
+        <h4 class="text-center">Вы можете хранить текст до 48 часов без регистрации</h4>
 
         <form method="POST" action="/" id="myform">
             <div class="form-outline mb-4 d-flex justify-content-center">
@@ -122,7 +122,7 @@
 
             <div id="submitdiv" class="mb-4 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary btn-block" id="submit">
-                    submit
+                    Отправить
                 </button>
             </div>
 
@@ -131,11 +131,18 @@
             </div>
 
             <script>
+		textarea = document.getElementById("textarea")
                 link = document.getElementById("link")
 
                 const queryString = window.location.search;
                 const urlParams = new URLSearchParams(queryString);
                 const url = urlParams.get('url')
+
+		window.onbeforeunload = function() {
+                    if (textarea.value != "" && urlParams.get("redir") != "true") {
+                        return "Data will be lost if you leave the page, are you sure?";
+                    };
+                };
 
                 console.log(url)
                 link.value = url;

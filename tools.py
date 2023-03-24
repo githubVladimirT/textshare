@@ -32,20 +32,32 @@ def init():
 def main():
     args = sys.argv[1::]
 
-    match args:
-        case ["init"]:
-            init()
+#    match args:
+#        case ["init"]:
+#            init()
+#
+#        case ["clean"]:
+#            stat, err = clean()
+#            if err != None:
+#                print(err)
+#                exit(-1)
+#            print(stat)
+#
+#        case _:
+#            print("error: unknow command")
+#            exit(-1)
 
-        case ["clean"]:
-            stat, err = clean()
-            if err != None:
-                print(err)
-                exit(-1)
-            print(stat)
-
-        case _:
-            print("error: unknow command")
+    if "init" in args:
+        init()
+    if "clean" in args:
+        stat, err = clean()
+        if err != None:
+            print(err)
             exit(-1)
+        print(stat)
+    if ("init" not in args) and ("clean" not in args):
+        print("error: unknow command")
+        exit(-1)
 
 
 if __name__ == "__main__":

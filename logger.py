@@ -7,15 +7,25 @@ import argparse
 
 
 def clientslogger(clientip: str, req: str, targetname: str):
-    time = datetime.now().strftime("%Y-%m-%d")
-    name = f"{time}.log"
+    year_and_month = datetime.now().strftime("%Y-%m")
+    
+    try:
+        os.mkdir(f'./{LOGS_DIR}/{year_and_month}/')
+    except FileExistsError:
+        pass
 
-    logging.basicConfig(
-        level=LOG_LEVEL,
-        filename=f'./{LOGS_DIR}/{name}',
-        filemode='a',
-        format='[  %(levelname)s  ]  -  %(clientip)s %(asctime)s - %(message)s %(targetname)s'
-    )
+    time = datetime.now().strftime("%Y-%m-%d")
+    #name = f"./{LOGS_DIR}/{year_and_month}/{time}.log"
+    global name
+    name = os.path.join(LOGS_DIR, year_and_month, f"{time}.log")
+
+    log = logging.getLogger("2a6f906e-ca2b-11ed-a80e-7412b32f9ac7")
+    handler = logging.FileHandler(name)
+    formatter = logging.Formatter("[  %(levelname)s  ]  -  %(clientip)s %(asctime)s - %(message)s %(targetname)s")
+
+    handler.setLevel(LOG_LEVEL)
+    handler.setFormatter(formatter)
+    log.addHandler(handler)
 
     data = {
         'clientip': clientip,
@@ -24,14 +34,14 @@ def clientslogger(clientip: str, req: str, targetname: str):
 
     match req:
         case "POST":
-            logging.info("created a file:", extra=data)
-            return f"post request had written to ./{LOGS_DIR}/{name}", name, None
+            log.info("created a file:", extra=data)
+            return f"post request had written to ./{name}", name, None
         case "GET":
-            logging.info("requested to file:", extra=data)
-            return f"get request had written to ./{LOGS_DIR}/{name}", name, None
+            log.info("requested to file:", extra=data)
+            return f"get request had written to ./{name}", name, None
         case "DELETE":
-            logging.info("requested to deleted file: ", extra=data)
-            return f"request to deleted file had written to ./{LOGS_DIR}/{name}", name, None
+            log.info("requested to deleted file: ", extra=data)
+            return f"request to deleted file had written to ./{name}", name, None
         case _:
             return "error: unknow request", name, True
 if __name__ == "__main__":
@@ -61,4 +71,4 @@ if __name__ == "__main__":
     print("---success---")
     print(res)
 
-    os.remove("./{LOGS_DIR}/{name}")
+    os.remove(name)

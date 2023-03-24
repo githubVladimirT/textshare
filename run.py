@@ -5,8 +5,9 @@ import asyncio
 from server import app
 
 config = Config()
-config.bind = [f'{settings.DOMAIN}:{settings.PORT}']
-config.loglevel = 'WARNING'
+config.bind = [f'{settings.HOST}:{settings.PRIVATE_PORT}']
+#config.loglevel = 'WARNING'
+config.loglevel = 'INFO'
 # config.certfile = settings.HTTPS['cert']
 # config.keyfile = settings.HTTPS['key']
 config.debug = settings.DEBUG

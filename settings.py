@@ -1,10 +1,12 @@
 import dotenv
 import logging
 
-DOMAIN = "127.0.0.1"
-PORT = 7443
+DOMAIN = "vladimir.selfip.ru"
+HOST = "0.0.0.0"
+PRIVATE_PORT = 7443
+#PORT = 80
 PREF = "https://"
-DEBUG = False
+DEBUG = True #False
 LIVETIME = 2 * 86400
 POSTS_DIR = "posts"
 POSTS_OLD_DIR = "posts.old"
