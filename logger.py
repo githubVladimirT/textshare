@@ -7,43 +7,51 @@ import argparse
 
 
 def clientslogger(clientip: str, req: str, targetname: str):
-    year_and_month = datetime.now().strftime("%Y-%m")
-    
     try:
-        os.mkdir(f'./{LOGS_DIR}/{year_and_month}/')
-    except FileExistsError:
-        pass
+        year_and_month = datetime.now().strftime("%Y-%m")
+    
+        try:
+            os.mkdir(f'./{LOGS_DIR}/{year_and_month}/')
+        except FileExistsError:
+            pass
 
-    time = datetime.now().strftime("%Y-%m-%d")
-    #name = f"./{LOGS_DIR}/{year_and_month}/{time}.log"
-    global name
-    name = os.path.join(LOGS_DIR, year_and_month, f"{time}.log")
+        time = datetime.now().strftime("%Y-%m-%d")
+        #name = f"./{LOGS_DIR}/{year_and_month}/{time}.log"
+        global name
+        name = os.path.join(LOGS_DIR, year_and_month, f"{time}.log")
 
-    log = logging.getLogger("2a6f906e-ca2b-11ed-a80e-7412b32f9ac7")
-    handler = logging.FileHandler(name)
-    formatter = logging.Formatter("[  %(levelname)s  ]  -  %(clientip)s %(asctime)s - %(message)s %(targetname)s")
+        log = logging.getLogger("2a6f906e-ca2b-11ed-a80e-7412b32f9ac7")
+        handler = logging.FileHandler(name)
+        formatter = logging.Formatter("[  %(levelname)s  ]  -  %(clientip)s %(asctime)s - %(message)s %(targetname)s")
 
-    handler.setLevel(LOG_LEVEL)
-    handler.setFormatter(formatter)
-    log.addHandler(handler)
+        handler.setLevel(LOG_LEVEL)
+        handler.setFormatter(formatter)
+        log.addHandler(handler)
 
-    data = {
-        'clientip': clientip,
-        'targetname': targetname,
-    }
+        data = {
+            'clientip': clientip,
+            'targetname': targetname,
+        }
 
-    match req:
-        case "POST":
-            log.info("created a file:", extra=data)
-            return f"post request had written to ./{name}", name, None
-        case "GET":
-            log.info("requested to file:", extra=data)
-            return f"get request had written to ./{name}", name, None
-        case "DELETE":
-            log.info("requested to deleted file: ", extra=data)
-            return f"request to deleted file had written to ./{name}", name, None
-        case _:
-            return "error: unknow request", name, True
+        match req:
+            case "POST":
+                log.info("created a file:", extra=data)
+                print(f"post request had written to ./{name}")
+                return f"post request had written to ./{name}", name, None
+            case "GET":
+                log.info("requested to file:", extra=data)
+                print(f"get request had written to ./{name}")
+                return f"get request had written to ./{name}", name, None
+            case "DELETE":
+                log.info("requested to deleted file: ", extra=data)
+                print(f"request to deleted file had written to ./{name}")
+                return f"request to deleted file had written to ./{name}", name, None
+            case _:
+                print("error: unknow request")
+                return "error: unknow request", name, True
+    except Exception as err:
+        print(f"ERROR!\ntext: {err}")
+        exit(-1)
 if __name__ == "__main__":
     print("---testmode---")
 

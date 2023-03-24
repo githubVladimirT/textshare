@@ -31,6 +31,7 @@ async def index_post():
         with open(path, 'w') as file:
             file.write(text)
 
+        print("write to file")
         logger.clientslogger(str(request.headers['X-Forwarded-For']), "POST", str(curr_uuid))
 
         #return redirect(url_for("index", url=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}"))
@@ -48,6 +49,7 @@ async def post(uuid):
     try:
         with open(path, 'r') as file:
             post = file.read()
+        print("write to file")
         logger.clientslogger(str(request.headers['X-Forwarded-For']), "GET", uuid)
 
         return Response(post, mimetype='text/plain')
@@ -65,7 +67,7 @@ def delete_old_posts():
     for file in os.listdir(POSTS_DIR):
         if os.path.getmtime(os.path.join(POSTS_DIR, file)) < now - LIVETIME:
             if os.path.isfile(os.path.join(POSTS_DIR, file)):
-                #os.rename(os.path.join(POSTS_DIR, file), os.path.join(
-                #    POSTS_OLD_DIR, file + "_deleted"))
                 shutil.move(os.path.join(POSTS_DIR, file), os.path.join(POSTS_OLD_DIR, file + "_deleted"))
+                print("write to file")
                 logger.clientslogger(str(request.remote_addr), "DELETE", file)
+
