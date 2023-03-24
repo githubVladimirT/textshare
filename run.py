@@ -7,7 +7,7 @@ from server import app
 config = Config()
 config.bind = [f'{settings.HOST}:{settings.PRIVATE_PORT}']
 #config.loglevel = 'WARNING'
-config.loglevel = 'INFO'
+config.loglevel = 'DEBUG'
 # config.certfile = settings.HTTPS['cert']
 # config.keyfile = settings.HTTPS['key']
 config.debug = settings.DEBUG

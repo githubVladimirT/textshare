@@ -20,11 +20,11 @@ def clientslogger(clientip: str, req: str, targetname: str):
         global name
         name = os.path.join(LOGS_DIR, year_and_month, f"{time}.log")
 
-        log = logging.getLogger("2a6f906e-ca2b-11ed-a80e-7412b32f9ac7")
-        handler = logging.FileHandler(name)
-        formatter = logging.Formatter("[  %(levelname)s  ]  -  %(clientip)s %(asctime)s - %(message)s %(targetname)s")
+        log = logging.getLogger(__name__)
+        log.setLevel(LOG_LEVEL)
+        handler = logging.FileHandler(name, 'a')
+        formatter = logging.Formatter("[  %(levelname)s  ]  - ip: %(clientip)s %(asctime)s - %(message)s %(targetname)s")
 
-        handler.setLevel(LOG_LEVEL)
         handler.setFormatter(formatter)
         log.addHandler(handler)
 
@@ -49,6 +49,8 @@ def clientslogger(clientip: str, req: str, targetname: str):
             case _:
                 print("error: unknow request")
                 return "error: unknow request", name, True
+
+        sys.stdout.flush()
     except Exception as err:
         print(f"ERROR!\ntext: {err}")
         exit(-1)
