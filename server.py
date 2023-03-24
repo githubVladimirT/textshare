@@ -7,6 +7,8 @@ import logger
 from quart import Quart, Response, render_template, request, redirect, url_for
 from settings import *
 
+import sys
+
 app = Quart(
     __name__, static_folder=f"./{STATIC_DIR}", template_folder=f"./{TEMPLATES_DIR}")
 app.config.from_object(__name__)
@@ -16,6 +18,7 @@ app.config.from_object(__name__)
 @app.route('/')
 async def index():
     print(request.headers)
+    sys.stdout.flush()
     return await render_template("index.html", site_title=SITE_TITLE)
 
 
@@ -31,8 +34,8 @@ async def index_post():
         with open(path, 'w') as file:
             file.write(text)
 
-        print("write to file")
         logger.clientslogger(str(request.headers['X-Forwarded-For']), "POST", str(curr_uuid))
+        #logger.clientslogger(str(request.remote_addr), "POST", str(curr_uuid))
 
         #return redirect(url_for("index", url=f"{PREF}{DOMAIN}:{PORT}/post/{curr_uuid}"))
         return redirect(url_for("index", url=f"{PREF}{DOMAIN}/post/{curr_uuid}", redir="true"))
@@ -45,12 +48,14 @@ async def post(uuid):
     path = '{}/{}'.format(POSTS_DIR, uuid)
 
     delete_old_posts()
-
+    raise FileNotFoundError
+    
     try:
         with open(path, 'r') as file:
             post = file.read()
-        print("write to file")
+
         logger.clientslogger(str(request.headers['X-Forwarded-For']), "GET", uuid)
+        #logger.clientslogger(str(request.remote_addr), "GET", uuid)
 
         return Response(post, mimetype='text/plain')
     except FileNotFoundError:
@@ -68,6 +73,5 @@ def delete_old_posts():
         if os.path.getmtime(os.path.join(POSTS_DIR, file)) < now - LIVETIME:
             if os.path.isfile(os.path.join(POSTS_DIR, file)):
                 shutil.move(os.path.join(POSTS_DIR, file), os.path.join(POSTS_OLD_DIR, file + "_deleted"))
-                print("write to file")
-                logger.clientslogger(str(request.remote_addr), "DELETE", file)
+                logger.clientslogger(str(request.headers["X-Forwarded-For"]), "DELETE", file) #X-Forwarded-For
 
