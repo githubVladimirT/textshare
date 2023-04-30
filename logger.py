@@ -6,6 +6,12 @@ from datetime import datetime
 import argparse
 
 
+def flush(logfile):
+    sys.stdout.flush()
+    logfile.flush()
+
+
+
 def clientslogger(clientip: str, req: str, targetname: str):
     try:
         year_and_month = datetime.now().strftime("%Y-%m")
@@ -24,23 +30,24 @@ def clientslogger(clientip: str, req: str, targetname: str):
         match req:
             case "POST":
                 logfile.write(formatter.format("INFO", clientip, datetime.now().strftime("%Y-%m-%d"), "created a file", targetname))
-                print(f"post request had written to ./{name}")
-                return f"post request had written to ./{name}", name, None
+                flush(logfile)
+                print(f"post request had written to /{name}")
+                return f"post request had written to /{name}", name, None
             case "GET":
                 logfile.write(formatter.format("INFO", clientip, datetime.now().strftime("%Y-%m-%d"), "requested to file", targetname))
-                print(f"get request had written to ./{name}")
-                return f"get request had written to ./{name}", name, None
+                flush(logfile)
+                print(f"get request had written to /{name}")
+                return f"get request had written to /{name}", name, None
             case "DELETE":
                 logfile.write(formatter.format("INFO", clientip, datetime.now().strftime("%Y-%m-%d"), "requested to deleted file", targetname))
-                print(f"request to deleted file had written to ./{name}")
-                return f"request to deleted file had written to ./{name}", name, None
+                flush(logfile)
+                print(f"request to deleted file had written to /{name}")
+                return f"request to deleted file had written to /{name}", name, None
             case _:
                 logfile.write(formatter.format("ERROR", "NUL", datetime.now().strftime("%Y-%m-%d"), "UNKNOWN REQUEST", "NUL"))
+                flush(logfile)
                 print("error: unknow request")
                 return "error: unknow request", name, True
-
-        sys.stdout.flush()
-
 
     except Exception as err:
         logfile.write(formatter.format("ERROR", "NUL", datetime.now().strftime("%Y-%m-%d"), f"ERROR: '{err}'", "NUL"))

@@ -48,7 +48,7 @@ async def post(uuid):
     path = '/{}/{}'.format(POSTS_DIR, uuid)
 
     delete_old_posts()
-    raise FileNotFoundError
+    #raise FileNotFoundError
     
     try:
         with open(path, 'r') as file:
@@ -69,9 +69,15 @@ async def page_not_found(error):
 
 def delete_old_posts():
     now = time()
-    for file in os.listdir(os.path.join('/', POSTS_DIR)):
-        if os.path.getmtime(os.path.join('/', POSTS_DIR, file)) < now - LIVETIME:
-            if os.path.isfile(os.path.join('/', POSTS_DIR, file)):
-                shutil.move(os.path.join('/', POSTS_DIR, file), os.path.join('/', POSTS_OLD_DIR, file + "_deleted"))
-                logger.clientslogger(str(request.headers["X-Forwarded-For"]), "DELETE", file) #X-Forwarded-For
+    try:
+        for file in os.listdir(os.path.join('/', POSTS_DIR)):
+            if os.path.getmtime(os.path.join('/', POSTS_DIR, file)) < now - LIVETIME:
+                if os.path.isfile(os.path.join('/', POSTS_DIR, file)):
+                    print(file)
+                    shutil.move(os.path.join('/', POSTS_DIR, file), os.path.join('/', POSTS_OLD_DIR, file + "_deleted"))
+                    logger.clientslogger(str(request.headers["X-Forwarded-For"]), "DELETE", file) #X-Forwarded-For
 
+    except FileNotFoundError as err:
+        print(f"filename: {err.filename}")
+    except OSError as err:
+        print(f"filename: {err.filename}\nfilename2: {err.filename2}")
