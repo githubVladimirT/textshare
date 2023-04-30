@@ -9,6 +9,7 @@ import argparse
 def flush(logfile):
     sys.stdout.flush()
     logfile.flush()
+    logfile.close()
 
 
 
@@ -17,15 +18,15 @@ def clientslogger(clientip: str, req: str, targetname: str):
         year_and_month = datetime.now().strftime("%Y-%m")
     
         try:
-            os.mkdir(f'{LOGS_DIR}/{year_and_month}/')
+            os.mkdir(f'/{LOGS_DIR}/{year_and_month}/')
         except FileExistsError:
             pass
 
         global name
-        name = os.path.join(LOGS_DIR, year_and_month, f'{datetime.now().strftime("%Y-%m-%d")}.log')
+        name = os.path.join('/', LOGS_DIR, year_and_month, f'{datetime.now().strftime("%Y-%m-%d")}.log')
 
         logfile = open(name, 'a')
-        formatter = "[  {}  ]  - ip: {} time: {} - msg: {} target: {}"
+        formatter = "[  {}  ]  - ip: {} time: {} - msg: {} target: {}\n"
 
         match req:
             case "POST":
