@@ -15,41 +15,45 @@ def clientslogger(clientip: str, req: str, targetname: str):
         except FileExistsError:
             pass
 
+        time = datetime.now().strftime("%Y-%m-%d")
+        #name = f"./{LOGS_DIR}/{year_and_month}/{time}.log"
         global name
-        name = os.path.join(LOGS_DIR, year_and_month, f'{datetime.now().strftime("%Y-%m-%d")}.log')
+        name = os.path.join(LOGS_DIR, year_and_month, f"{time}.log")
 
-        logfile = open(name, 'a')
-        formatter = "[  {}  ]  - ip: {} time: {} - msg: {} target: {}"
+        log = logging.getLogger(__name__)
+        log.setLevel(LOG_LEVEL)
+        handler = logging.FileHandler(name, 'a')
+        formatter = logging.Formatter("[  %(levelname)s  ]  - ip: %(clientip)s %(asctime)s - %(message)s %(targetname)s")
+
+        handler.setFormatter(formatter)
+        log.addHandler(handler)
+
+        data = {
+            'clientip': clientip,
+            'targetname': targetname,
+        }
 
         match req:
             case "POST":
-                logfile.write(formatter.format("INFO", clientip, datetime.now().strftime("%Y-%m-%d"), "created a file", targetname))
+                log.info("created a file:", extra=data)
                 print(f"post request had written to ./{name}")
                 return f"post request had written to ./{name}", name, None
             case "GET":
-                logfile.write(formatter.format("INFO", clientip, datetime.now().strftime("%Y-%m-%d"), "requested to file", targetname))
+                log.info("requested to file:", extra=data)
                 print(f"get request had written to ./{name}")
                 return f"get request had written to ./{name}", name, None
             case "DELETE":
-                logfile.write(formatter.format("INFO", clientip, datetime.now().strftime("%Y-%m-%d"), "requested to deleted file", targetname))
+                log.info("requested to deleted file: ", extra=data)
                 print(f"request to deleted file had written to ./{name}")
                 return f"request to deleted file had written to ./{name}", name, None
             case _:
-                logfile.write(formatter.format("ERROR", "NUL", datetime.now().strftime("%Y-%m-%d"), "UNKNOWN REQUEST", "NUL"))
                 print("error: unknow request")
                 return "error: unknow request", name, True
 
         sys.stdout.flush()
-
-
     except Exception as err:
-        logfile.write(formatter.format("ERROR", "NUL", datetime.now().strftime("%Y-%m-%d"), f"ERROR: '{err}'", "NUL"))
         print(f"ERROR!\ntext: {err}")
-      
-        logfile.close()
         exit(-1)
-
-
 if __name__ == "__main__":
     print("---testmode---")
 

@@ -29,7 +29,7 @@ async def index_post():
     if text.strip() != "":
 
         curr_uuid = uuid4()
-        path = '{}/{}'.format(POSTS_DIR, curr_uuid)
+        path = '/{}/{}'.format(POSTS_DIR, curr_uuid)
 
         with open(path, 'w') as file:
             file.write(text)
@@ -45,7 +45,7 @@ async def index_post():
 
 @app.route('/post/<uuid>/', methods=["GET"])
 async def post(uuid):
-    path = '{}/{}'.format(POSTS_DIR, uuid)
+    path = '/{}/{}'.format(POSTS_DIR, uuid)
 
     delete_old_posts()
     raise FileNotFoundError
@@ -69,9 +69,9 @@ async def page_not_found(error):
 
 def delete_old_posts():
     now = time()
-    for file in os.listdir(POSTS_DIR):
-        if os.path.getmtime(os.path.join(POSTS_DIR, file)) < now - LIVETIME:
-            if os.path.isfile(os.path.join(POSTS_DIR, file)):
-                shutil.move(os.path.join(POSTS_DIR, file), os.path.join(POSTS_OLD_DIR, file + "_deleted"))
+    for file in os.listdir(os.path.join('/', POSTS_DIR)):
+        if os.path.getmtime(os.path.join('/', POSTS_DIR, file)) < now - LIVETIME:
+            if os.path.isfile(os.path.join('/', POSTS_DIR, file)):
+                shutil.move(os.path.join('/', POSTS_DIR, file), os.path.join('/', POSTS_OLD_DIR, file + "_deleted"))
                 logger.clientslogger(str(request.headers["X-Forwarded-For"]), "DELETE", file) #X-Forwarded-For
 

@@ -16,7 +16,7 @@ LOGS_DIR = "logs"
 LOG_LEVEL = logging.DEBUG
 SITE_TITLE = "TextShare"
 KEY = dotenv.get_key('.env', 'KEY')
-HTTPS = {
-    'cert': "./certs/cert.pem",
-    'key': "./certs/key.pem"
-}
+#HTTPS = {
+#    'cert': "./certs/cert.pem",
+#    'key': "./certs/key.pem"
+#}

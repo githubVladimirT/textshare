@@ -18,9 +18,9 @@ def clean():
 
 def init():
     try:
-        os.mkdir("./posts/")
-        os.mkdir("./posts.old/")
-        os.mkdir("./logs/")
+        os.mkdir("/posts/")
+        os.mkdir("/posts.old/")
+        os.mkdir("/logs/")
         env = open('.env', 'x')
         env.close()
     except FileExistsError:
